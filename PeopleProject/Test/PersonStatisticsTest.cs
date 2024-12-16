@@ -32,6 +32,13 @@ namespace PeopleProject.Test
             Assert.That(vizsgaltSzemely.GetIsStudent(), Is.False);
             Assert.That(vizsgaltSzemely.GetScore(), Is.EqualTo(80));
         }
+
+        [Test]
+        public void TestIdKereso()
+        {
+            var hiba = Assert.Throws<ArgumentException>(() => p.idKereso(2));
+            Assert.That(hiba.Message, Is.EqualTo("Nincs ilyen id!"));
+        }
         
         [Test]
         public void TestInvalidId()
@@ -62,6 +69,128 @@ namespace PeopleProject.Test
             var hiba = Assert.Throws<ArgumentException>(() => p.addPerson(2, "John", 25, false, -1));
             Assert.That(hiba.Message, Is.EqualTo("A pontszám nem lehet negatív!"));
         }
+        
+        [Test]
+        public void TestAverageAge()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            Assert.That(p.getAverageAge(), Is.EqualTo(26));
+        }
 
+        [Test]
+        public void TestAverageAgeNoPeople()
+        {
+            p.people.Clear();
+            var hiba = Assert.Throws<ArgumentException>(() => p.getAverageAge());
+            Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+
+        [Test]
+        public void TestNumberOfStudentsNoStudents()
+        {
+            p.people.Clear();
+            var hiba = Assert.Throws<ArgumentException>(() => p.getNumberOfStudents());
+            Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+        
+        [Test]
+        public void TestNumberOfStudents()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            p.addPerson(3, "Jack", 22, true, 85);
+            Assert.That(p.getNumberOfStudents(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void TestNumberOfStudents2()
+        {
+            Assert.That(p.getNumberOfStudents(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void TestNumberOfStudents3()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            p.addPerson(3, "Jack", 22, true, 85);
+            p.addPerson(4, "Jill", 19, true, 95);
+            Assert.That(p.getNumberOfStudents(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void TestPersonWithHighestScoreNoPeople()
+        {
+            p.people.Clear();
+            var hiba = Assert.Throws<ArgumentException>(() => p.getPersonWithHighestScore());
+            Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+
+        [Test]
+        public void TestPersonWithHighestScore()
+        {
+            p.addPerson(2, "Jane", 27, false, 75);
+            Assert.That(p.getPersonWithHighestScore(), Is.EqualTo(p.idKereso(1)));
+        }
+
+        [Test]
+        public void TestAvarageScoreOfStudentsNoStudents()
+        {
+            p.people.Clear();
+            var hiba = Assert.Throws<ArgumentException>(() => p.getAvarageScoreOfStudents());
+            Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+
+        [Test]
+        public void TestAvarageScoreOfStudents()
+        {
+            p.addPerson(3, "Alice", 20, true, 88);
+            p.addPerson(4, "Bob", 21, true, 92);
+            Assert.That(p.getAvarageScoreOfStudents(), Is.EqualTo(90));
+        }
+
+        [Test]
+        public void TestGetOldestStudentNoStudents()
+        {
+            p.people.Clear();
+            var hiba = Assert.Throws<ArgumentException>(() => p.getOldestStudent());
+        }
+
+        [Test]
+        public void TestGetOldestStudent()
+        {
+            p.addPerson(2, "Jane", 24, true, 75);
+            Assert.That(p.getOldestStudent(), Is.EqualTo(p.idKereso(2)));
+        }
+
+        [Test]
+        public void TestGetOldestStudent2()
+        {
+            p.addPerson(2, "Jane", 28, false, 75);
+            p.addPerson(3, "Alice", 27, true, 88);
+            p.addPerson(4, "Bob", 21, true, 92);
+            Assert.That(p.getOldestStudent(), Is.EqualTo(p.idKereso(3)));
+        }
+
+        [Test]
+        public void TestIsAnyoneFailingNoPeople()
+        {
+            p.people.Clear();
+            var hiba = Assert.Throws<ArgumentException>(() => p.isAnyoneFailing());
+            Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+
+        [Test]
+        public void TestIsAnyoneFailing()
+        {
+            Assert.That(p.isAnyoneFailing(), Is.False);
+        }
+
+        [Test]
+        public void TestIsAnyoneFailing2()
+        {
+            p.addPerson(2, "Jane", 28, false, 75);
+            p.addPerson(3, "Alice", 27, true, 39);
+            p.addPerson(4, "Bob", 21, true, 92);
+            Assert.That(p.isAnyoneFailing(), Is.True);
+        }
     }
 }

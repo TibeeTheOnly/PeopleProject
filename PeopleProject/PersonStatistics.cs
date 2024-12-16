@@ -41,5 +41,103 @@
             }
         }
 
+        internal int getAverageAge()
+        {
+            if (people.Count == 0)
+            {
+                throw new ArgumentException("Nincs egyetlen személy sem!");
+            }
+            else
+            {
+                int sum = 0;
+                foreach (var person in people)
+                {
+                    sum += person.GetAge();
+                }
+                return sum / people.Count;
+            }
+        }
+
+        internal int getNumberOfStudents()
+        {
+            if(people.Count == 0)
+            {
+                throw new ArgumentException("Nincs egyetlen személy sem!");
+            }
+            else
+            {
+                foreach (var person in people)
+                {
+                    if (person.GetIsStudent())
+                    {
+                        return people.Count(x => x.GetIsStudent());
+                    }
+                }
+                return 0; ;
+            }
+        }
+
+        internal Person getPersonWithHighestScore()
+        {
+            if (people.Count == 0)
+            {
+                throw new ArgumentException("Nincs egyetlen személy sem!");
+            }
+            else
+            {
+                var person = people.Find(x => x.GetScore() == people.Max(x => x.GetScore()));
+                return person;
+            }
+        }
+
+        internal double getAvarageScoreOfStudents()
+        {
+            if(people.Count == 0)
+            {
+                throw new ArgumentException("Nincs egyetlen személy sem!");
+            }
+            else
+            {
+                int sum = 0;
+                int count = 0;
+                foreach (var person in people)
+                {
+                    if (person.GetIsStudent())
+                    {
+                        sum += person.GetScore();
+                        count++;
+                    }
+                }
+                return sum / count;
+            }
+        }
+
+        internal Person getOldestStudent()
+        {
+            if (people.Count == 0)
+            {
+                throw new ArgumentException("Nincs egyetlen személy sem!");
+            }
+            else
+            {
+                var oldestStudent = people
+                    .Where(x => x.GetIsStudent())
+                    .OrderByDescending(x => x.GetAge())
+                    .FirstOrDefault();
+                return oldestStudent;
+            }
+        }
+
+        internal bool isAnyoneFailing()
+        {
+            if(people.Count == 0)
+            {
+                throw new ArgumentException("Nincs egyetlen személy sem!");
+            }
+            else
+            {
+                return people.Any(x => x.GetScore() < 40);
+            }
+        }
     }
 }
