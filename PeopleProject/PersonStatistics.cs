@@ -3,10 +3,17 @@
     public class PersonStatistics
     {
         internal List<Person> people = new List<Person>();
+        private object value;
+
+        public PersonStatistics(object value)
+        {
+            this.value = value ?? throw new ArgumentNullException(nameof(value), "Érték nem lehet null. (Parameter 'people')");
+        }
+
         internal void addPerson(int id, string name, int age, bool isStudent, int score)
         {
             bool isIdNew = people.Find(x => x.GetId() == id) == null;;
-            if (name != null && name != "" && age > 0 && score >= 0 && isIdNew)
+            if (name != null && name != "" && age > 0 && score >= 0 && isIdNew && age < 120)
             {
                 people.Add(new Person(id, name, age, isStudent, score));
             }
@@ -21,6 +28,10 @@
             else if (age < 0)
             {
                 throw new ArgumentException("Az életkor nem lehet negatív!");
+            }
+            else if (age > 120)
+            {
+                throw new ArgumentException("Az életkor nem lehet nagyobb mint 120!");
             }
             else if (score < 0)
             {
@@ -73,7 +84,7 @@
                         return people.Count(x => x.GetIsStudent());
                     }
                 }
-                return 0; ;
+                return 0;
             }
         }
 
@@ -108,7 +119,14 @@
                         count++;
                     }
                 }
-                return sum / count;
+                if(count == 0)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return sum / count;
+                }
             }
         }
 

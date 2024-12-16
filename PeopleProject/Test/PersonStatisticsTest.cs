@@ -15,7 +15,7 @@ namespace PeopleProject.Test
         [SetUp]
         public void Setup()
         {
-            p = new PersonStatistics();
+            p = new PersonStatistics(new List<Person>());
             p.addPerson(1, "John", 25, false, 80);
         }
         
@@ -69,13 +69,6 @@ namespace PeopleProject.Test
             var hiba = Assert.Throws<ArgumentException>(() => p.addPerson(2, "John", 25, false, -1));
             Assert.That(hiba.Message, Is.EqualTo("A pontszám nem lehet negatív!"));
         }
-        
-        [Test]
-        public void TestAverageAge()
-        {
-            p.addPerson(2, "Jane", 27, false, 90);
-            Assert.That(p.getAverageAge(), Is.EqualTo(26));
-        }
 
         [Test]
         public void TestAverageAgeNoPeople()
@@ -83,6 +76,27 @@ namespace PeopleProject.Test
             p.people.Clear();
             var hiba = Assert.Throws<ArgumentException>(() => p.getAverageAge());
             Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+
+        [Test]
+        public void TestAverageAge()
+        {
+            Assert.That(p.getAverageAge(), Is.EqualTo(25));
+        }
+
+        [Test]
+        public void TestAvarageAge2()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            Assert.That(p.getAverageAge(), Is.EqualTo(26));
+        }
+
+        [Test]
+        public void TestAvarageAge3()
+        {
+            p.addPerson(2, "Jane", 75, false, 90);
+            p.addPerson(3, "Jack", 101, true, 85);
+            Assert.That(p.getAverageAge(), Is.EqualTo(67));
         }
 
         [Test]
@@ -96,24 +110,36 @@ namespace PeopleProject.Test
         [Test]
         public void TestNumberOfStudents()
         {
+            Assert.That(p.getNumberOfStudents(), Is.EqualTo(0));
+        }
+        
+        [Test]
+        public void TestNumberOfStudents2()
+        {
             p.addPerson(2, "Jane", 27, false, 90);
             p.addPerson(3, "Jack", 22, true, 85);
             Assert.That(p.getNumberOfStudents(), Is.EqualTo(1));
         }
 
         [Test]
-        public void TestNumberOfStudents2()
+        public void TestNumberOfStudents3()
         {
-            Assert.That(p.getNumberOfStudents(), Is.EqualTo(0));
+            p.addPerson(2, "Jane", 27, true, 90);
+            p.addPerson(3, "Jack", 22, true, 85);
+            p.addPerson(4, "Jill", 19, true, 95);
+            Assert.That(p.getNumberOfStudents(), Is.EqualTo(3));
         }
 
         [Test]
-        public void TestNumberOfStudents3()
+        public void TestNumberOfStudents4()
         {
             p.addPerson(2, "Jane", 27, false, 90);
             p.addPerson(3, "Jack", 22, true, 85);
             p.addPerson(4, "Jill", 19, true, 95);
-            Assert.That(p.getNumberOfStudents(), Is.EqualTo(2));
+            p.addPerson(5, "Jenny", 18, false, 75);
+            p.addPerson(6, "Joe", 19, true, 40);
+            p.addPerson(7, "Jason", 19, true, 70);
+            Assert.That(p.getNumberOfStudents(), Is.EqualTo(4));
         }
 
         [Test]
@@ -127,12 +153,35 @@ namespace PeopleProject.Test
         [Test]
         public void TestPersonWithHighestScore()
         {
-            p.addPerson(2, "Jane", 27, false, 75);
             Assert.That(p.getPersonWithHighestScore(), Is.EqualTo(p.idKereso(1)));
         }
 
         [Test]
-        public void TestAvarageScoreOfStudentsNoStudents()
+        public void TestPersonWithHighestScore2()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            Assert.That(p.getPersonWithHighestScore(), Is.EqualTo(p.idKereso(2)));
+        }
+
+        [Test]
+        public void TestPersonWithHighestScore3()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            p.addPerson(3, "Jack", 22, true, 85);
+            Assert.That(p.getPersonWithHighestScore(), Is.EqualTo(p.idKereso(2)));
+        }
+
+        [Test]
+        public void TestPersonWithHighestScore4()
+        {
+            p.addPerson(2, "Jane", 27, false, 90);
+            p.addPerson(3, "Jack", 22, true, 90);
+            p.addPerson(4, "Jill", 24, true, 90);
+            Assert.That(p.getPersonWithHighestScore(), Is.EqualTo(p.idKereso(2)));
+        }
+
+        [Test]
+        public void TestAvarageScoreOfStudentsNoPeople()
         {
             p.people.Clear();
             var hiba = Assert.Throws<ArgumentException>(() => p.getAvarageScoreOfStudents());
@@ -142,16 +191,39 @@ namespace PeopleProject.Test
         [Test]
         public void TestAvarageScoreOfStudents()
         {
+            Assert.That(p.getAvarageScoreOfStudents(), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void TestAvarageScoreOfStudents2()
+        {
             p.addPerson(3, "Alice", 20, true, 88);
             p.addPerson(4, "Bob", 21, true, 92);
             Assert.That(p.getAvarageScoreOfStudents(), Is.EqualTo(90));
         }
 
         [Test]
-        public void TestGetOldestStudentNoStudents()
+        public void TestAvarageScoreOfStudents3()
+        {
+            p.addPerson(3, "Alice", 20, true, 25);
+            p.addPerson(4, "Bob", 21, true, 75);
+            p.addPerson(5, "Jill", 24, false, 60);
+            p.addPerson(6, "Joe", 25, false, 30);
+            Assert.That(p.getAvarageScoreOfStudents(), Is.EqualTo(50));
+        }
+
+        [Test]
+        public void TestGetOldestStudentNoPeople()
         {
             p.people.Clear();
             var hiba = Assert.Throws<ArgumentException>(() => p.getOldestStudent());
+            Assert.That(hiba.Message, Is.EqualTo("Nincs egyetlen személy sem!"));
+        }
+
+        [Test]
+        public void TestGetOldestStudentNoStudents()
+        {
+            Assert.That(p.getOldestStudent(), Is.Null);
         }
 
         [Test]
@@ -167,6 +239,15 @@ namespace PeopleProject.Test
             p.addPerson(2, "Jane", 28, false, 75);
             p.addPerson(3, "Alice", 27, true, 88);
             p.addPerson(4, "Bob", 21, true, 92);
+            Assert.That(p.getOldestStudent(), Is.EqualTo(p.idKereso(3)));
+        }
+
+        [Test]
+        public void TestGetOldestStudent3()
+        {
+            p.addPerson(2, "Jane", 28, false, 75);
+            p.addPerson(3, "Alice", 27, true, 88);
+            p.addPerson(4, "Bob", 27, true, 92);
             Assert.That(p.getOldestStudent(), Is.EqualTo(p.idKereso(3)));
         }
 
@@ -187,10 +268,45 @@ namespace PeopleProject.Test
         [Test]
         public void TestIsAnyoneFailing2()
         {
+            p.people.Clear();
+            p.addPerson(2, "Jane", 28, false, 15);
+            p.addPerson(3, "Alice", 27, true, 39);
+            p.addPerson(4, "Bob", 21, true, 20);
+            Assert.That(p.isAnyoneFailing(), Is.True);
+        }
+
+        [Test]
+        public void TestIsAnyoneFailing3()
+        {
             p.addPerson(2, "Jane", 28, false, 75);
             p.addPerson(3, "Alice", 27, true, 39);
             p.addPerson(4, "Bob", 21, true, 92);
             Assert.That(p.isAnyoneFailing(), Is.True);
         }
+        [Test]
+        public void TestNullListInConstructor()
+        {
+            var hiba = Assert.Throws<ArgumentNullException>(() => new PersonStatistics((List<Person>)null));
+            Assert.That(hiba.Message, Is.EqualTo("Érték nem lehet null. (Parameter 'people') (Parameter 'value')"));
+        }
+
+        [Test]
+        public void TestEmptyListInitialization()
+        {
+            var emptyStatistics = new PersonStatistics(new List<Person>());
+            Assert.That(emptyStatistics.people.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void TestExtremeValues()
+        {
+            var hibaHighAge = Assert.Throws<ArgumentException>(() => p.addPerson(2, "John", 150, false, 80));
+            Assert.That(hibaHighAge.Message, Is.EqualTo("Az életkor nem lehet nagyobb mint 120!"));
+
+            var hibaLowScore = Assert.Throws<ArgumentException>(() => p.addPerson(3, "Jane", 25, false, -10));
+            Assert.That(hibaLowScore.Message, Is.EqualTo("A pontszám nem lehet negatív!"));
+        }
+
+
     }
 }
